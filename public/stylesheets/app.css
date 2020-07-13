@@ -1,0 +1,59 @@
+.all-campgrounds-container{
+    display:flex; 
+    flex-wrap: wrap;
+}
+
+.thumbnail img{
+    width:100%;
+}
+
+.thumbnail{
+    padding:0;
+}
+
+.form-container{
+    width:30%; 
+    margin:30px auto;
+}
+
+.form-header{
+    text-align: center;
+}
+
+.delete-form{
+    display:inline;
+}
+
+.fa-user-circle{
+    font-size:2rem;
+    margin-right:10px;
+}
+
+.fa-star{
+    color:gold;
+}
+
+.rating-max{
+    font-size: 1.2em;
+}
+
+.review-header{
+    margin-bottom:9px;
+}
+
+.show-title, .fa-arrow-left{
+    margin-right:10px;
+}
+
+.review-container{
+    margin-bottom:10px;
+}
+
+.location-container{
+    margin-top:30px;
+}
+
+#map{
+    height:400px;
+    width:100%;
+}
