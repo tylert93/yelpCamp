@@ -31,7 +31,7 @@ app.locals.moment = moment;
 //     useFindAndModify:false 
 // });
 
-mongoose.connect("mongodb+srv://tom-tyler:bongo33@cluster0.8znkx.mongodb.net/yelp_camp_deployed?retryWrites=true&w=majority", { 
+mongoose.connect("mongodb+srv://" + process.env.DB_USERNAME + ":" + process.env.DB_PASSWORD + "@cluster0.8znkx.mongodb.net/yelp_camp_deployed?retryWrites=true&w=majority", { 
     useUnifiedTopology: true, 
     useNewUrlParser: true, 
     useFindAndModify:false 
