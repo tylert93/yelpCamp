@@ -25,7 +25,13 @@ app.use(methodOveride("_method")),
 app.use(flash());
 app.locals.moment = moment;
 
-mongoose.connect("mongodb://localhost/yelp_camp_3", { 
+// mongoose.connect("mongodb://localhost/yelp_camp_3", { 
+//     useUnifiedTopology: true, 
+//     useNewUrlParser: true, 
+//     useFindAndModify:false 
+// });
+
+mongoose.connect("mongodb+srv://tom-tyler:bongo33@cluster0.8znkx.mongodb.net/yelp_camp_deployed?retryWrites=true&w=majority", { 
     useUnifiedTopology: true, 
     useNewUrlParser: true, 
     useFindAndModify:false 
