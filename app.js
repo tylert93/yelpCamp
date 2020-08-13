@@ -1,21 +1,21 @@
 require('dotenv').config();
 
-var express = require("express"),
-    app = express(),
-    bodyParser = require("body-parser"),
-    mongoose = require("mongoose"),
-    Campground = require("./models/campground"),
-    Review = require("./models/review"),
-    User = require("./models/user"),
-    passport = require("passport"),
-    localStrategy = require("passport-local"),
-    expressSession = require("express-session"),
-    campgroundRoutes = require("./routes/campgrounds"),
-    reviewRoutes = require("./routes/reviews"),
-    indexRoutes = require("./routes/index"),
-    methodOveride = require("method-override"),
-    flash = require("connect-flash"),
-    moment = require("moment");  
+const express = require("express"),
+      app = express(),
+      bodyParser = require("body-parser"),
+      mongoose = require("mongoose"),
+      Campground = require("./models/campground"),
+      Review = require("./models/review"),
+      User = require("./models/user"),
+      passport = require("passport"),
+      localStrategy = require("passport-local"),
+      expressSession = require("express-session"),
+      campgroundRoutes = require("./routes/campgrounds"),
+      reviewRoutes = require("./routes/reviews"),
+      indexRoutes = require("./routes/index"),
+      methodOveride = require("method-override"),
+      flash = require("connect-flash"),
+      moment = require("moment");  
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended:true}));
