@@ -15,7 +15,7 @@ const express = require("express"),
       indexRoutes = require("./routes/index"),
       methodOveride = require("method-override"),
       flash = require("connect-flash"),
-      moment = require("moment");  
+      moment = require("moment");
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended:true}));
