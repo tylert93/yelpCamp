@@ -1,17 +1,15 @@
-var middlewareObj = require("../middleware");
+const express = require("express"),
+      router = express.Router(),
+      middleware = require("../middleware"),
+      Campground = require("../models/campground"),
+      Review = require("../models/review");
 
-var express = require("express"),
-    router = express.Router(),
-    middleware = require("../middleware"),
-    Campground = require("../models/campground"),
-    Review = require("../models/review");
-
-function calculateAverage(reviews) {
+const calculateAverage = (reviews) => {
     if (reviews.length === 0) {
         return 0;
     }
     let sum = 0;
-    reviews.forEach(function(item) {
+    reviews.forEach((item) => {
 
         sum += Number(item.rating);
     });
@@ -19,8 +17,8 @@ function calculateAverage(reviews) {
 }
 
 // NEW
-router.get("/campgrounds/:id/reviews/new", middleware.isLoggedIn, middleware.checkReviewDuplication, function(req, res){
-    Campground.findById(req.params.id, function(err, foundCampground){
+router.get("/campgrounds/:id/reviews/new", middleware.isLoggedIn, middleware.checkReviewDuplication, (req, res) => {
+    Campground.findById(req.params.id, (err, foundCampground) => {
         if(err || !foundCampground){
             req.flash("Campground not found")
             res.redirect("/error");
@@ -31,13 +29,13 @@ router.get("/campgrounds/:id/reviews/new", middleware.isLoggedIn, middleware.che
 });
 
 // CREATE
-router.post("/campgrounds/:id/reviews", middleware.isLoggedIn, middleware.checkReviewDuplication, function(req, res){
-    Campground.findById(req.params.id).populate("reviews").exec(function(err, foundCampground){
+router.post("/campgrounds/:id/reviews", middleware.isLoggedIn, middleware.checkReviewDuplication, (req, res) => {
+    Campground.findById(req.params.id).populate("reviews").exec((err, foundCampground) => {
         if(err || !foundCampground){
             req.flash("error", "Campground not found");
             res.redirect("/error")
         } else {
-            Review.create(req.body.review, function(err, createdReview){
+            Review.create(req.body.review, (err, createdReview) => {
                 if(err || !createdReview){
                     req.flash("error", "Review not created");
                     res.redirect("/error");
@@ -57,8 +55,8 @@ router.post("/campgrounds/:id/reviews", middleware.isLoggedIn, middleware.checkR
 });
 
 // EDIT
-router.get("/campgrounds/:id/reviews/:review_id/edit", middleware.isLoggedIn, middleware.checkReviewOwnership, function(req, res){
-    Review.findById(req.params.review_id, function(err, foundReview){
+router.get("/campgrounds/:id/reviews/:review_id/edit", middleware.isLoggedIn, middleware.checkReviewOwnership, (req, res) => {
+    Review.findById(req.params.review_id, (err, foundReview) => {
         if(err || !foundReview){
             req.flash("error", "Review not found");
             res.redirect("error");
@@ -69,13 +67,13 @@ router.get("/campgrounds/:id/reviews/:review_id/edit", middleware.isLoggedIn, mi
 });
 
 // UPDATE
-router.put("/campgrounds/:id/reviews/:review_id", middleware.isLoggedIn, middleware.checkReviewOwnership, function(req, res){
-    Review.findByIdAndUpdate(req.params.review_id, req.body.review, function(err, updatedReview){
+router.put("/campgrounds/:id/reviews/:review_id", middleware.isLoggedIn, middleware.checkReviewOwnership, (req, res) => {
+    Review.findByIdAndUpdate(req.params.review_id, req.body.review, (err, updatedReview) => {
         if(err){
             req.flash("error", err.message);
             res.redirect("back");
         } else {
-            Campground.findById(req.params.id).populate("reviews").exec(function(err, foundCampground){
+            Campground.findById(req.params.id).populate("reviews").exec((err, foundCampground) => {
                 if(err){
                     req.flash("error", err.message);
                     res.redirect("back");
@@ -91,13 +89,13 @@ router.put("/campgrounds/:id/reviews/:review_id", middleware.isLoggedIn, middlew
 });
 
 // DELETE
-router.delete("/campgrounds/:id/reviews/:review_id", middleware.isLoggedIn, middleware.checkReviewOwnership, function(req, res){
-    Review.findByIdAndDelete(req.params.review_id, function(err, deletedReview){
+router.delete("/campgrounds/:id/reviews/:review_id", middleware.isLoggedIn, middleware.checkReviewOwnership, (req, res) => {
+    Review.findByIdAndDelete(req.params.review_id, (err, deletedReview) => {
         if(err || !deletedReview){
             req.flash("error", "Review not deleted");
             res.redirect("error");
         } else {
-            Campground.findByIdAndUpdate(req.params.id, {$pull: {reviews: req.params.review_id}}, {new: true}).populate("reviews").exec(function (err, foundCampground){
+            Campground.findByIdAndUpdate(req.params.id, {$pull: {reviews: req.params.review_id}}, {new: true}).populate("reviews").exec((err, foundCampground) => {
                 foundCampground.rating = calculateAverage(foundCampground.reviews);
                 foundCampground.save();
                 res.redirect("/campgrounds/" + req.params.id);
