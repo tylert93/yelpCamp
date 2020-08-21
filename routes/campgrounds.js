@@ -1,23 +1,22 @@
-var express = require("express"),
+const express = require("express"),
     router = express.Router(),
     middleware = require("../middleware"),
     Campground = require("../models/campground"),
-    Review = require("../models/review");
+    Review = require("../models/review"),
+    NodeGeocoder = require('node-geocoder');
 
-var NodeGeocoder = require('node-geocoder');
-
-var options = {
+const options = {
     provider: 'google',
     httpAdapter: 'https',
     apiKey: process.env.GEOCODER_API_KEY,
     formatter: null
 };
         
-var geocoder = NodeGeocoder(options);      
+const geocoder = NodeGeocoder(options);      
 
 // INDEX
-router.get("/campgrounds", function(req, res){
-    Campground.find({}, function(err, allCampgrounds){
+router.get("/campgrounds", (req, res) => {
+    Campground.find({}, (err, allCampgrounds) => {
         if(err){
             res.render("error", req.flash("error", err.message));
         } else {
@@ -27,16 +26,16 @@ router.get("/campgrounds", function(req, res){
 });
 
 // CREATE
-router.post("/campgrounds", middleware.isLoggedIn, function(req, res){
-    geocoder.geocode(req.body.location, function (err, data) {
+router.post("/campgrounds", middleware.isLoggedIn, (req, res) => {
+    geocoder.geocode(req.body.location, (err, data) => {
         if (err || !data.length) {
           req.flash('error', 'Invalid address');
           return res.redirect('back');
         }
-        var lat = data[0].latitude;
-        var lng = data[0].longitude;
-        var location = data[0].formattedAddress;
-        Campground.create(req.body.campground, function(err, createdCampground){
+        let lat = data[0].latitude,
+            lng = data[0].longitude,
+            location = data[0].formattedAddress;
+        Campground.create(req.body.campground, (err, createdCampground) => {
             if(err){
                 req.flash("error", "Campground not created")
                 res.redirect("back");
@@ -55,13 +54,13 @@ router.post("/campgrounds", middleware.isLoggedIn, function(req, res){
 });
 
 // NEW
-router.get("/campgrounds/new", middleware.isLoggedIn, function(req, res){
+router.get("/campgrounds/new", middleware.isLoggedIn, (req, res) => {
     res.render("campgrounds/new");
 });
 
 // SHOW
-router.get("/campgrounds/:id", function(req, res){
-    Campground.findById(req.params.id).populate("reviews").exec(function(err, foundCampground){
+router.get("/campgrounds/:id", (req, res) => {
+    Campground.findById(req.params.id).populate("reviews").exec((err, foundCampground) => {
         if(err || !foundCampground){
             req.flash("error", err.message);
             console.log(err);
@@ -73,8 +72,8 @@ router.get("/campgrounds/:id", function(req, res){
 });
 
 // EDIT
-router.get("/campgrounds/:id/edit", middleware.checkCampgroundOwnership, function(req, res){
-    Campground.findById(req.params.id, function(err, foundCampground){
+router.get("/campgrounds/:id/edit", middleware.checkCampgroundOwnership, (req, res) => {
+    Campground.findById(req.params.id, (err, foundCampground) => {
         if(err || !foundCampground){
             req.flash("error", "Campground not found")
             res.redirect("/error");
@@ -85,8 +84,8 @@ router.get("/campgrounds/:id/edit", middleware.checkCampgroundOwnership, functio
 });
 
 // UPDATE
-router.put("/campgrounds/:id", middleware.checkCampgroundOwnership, function(req, res){
-    geocoder.geocode(req.body.location, function (err, data) {
+router.put("/campgrounds/:id", middleware.checkCampgroundOwnership, (req, res) => {
+    geocoder.geocode(req.body.location, (err, data) => {
         if (err || !data.length) {
           req.flash('error', 'Invalid address');
           return res.redirect('back');
@@ -94,7 +93,7 @@ router.put("/campgrounds/:id", middleware.checkCampgroundOwnership, function(req
         req.body.campground.lat = data[0].latitude;
         req.body.campground.lng = data[0].longitude;
         req.body.campground.location = data[0].formattedAddress;
-        Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
+        Campground.findByIdAndUpdate(req.params.id, req.body.campground, (err, updatedCampground) => {
             if(err || !updatedCampground){
                 req.flash("error", "Campground not found")
                 res.redirect("/error");
@@ -107,13 +106,13 @@ router.put("/campgrounds/:id", middleware.checkCampgroundOwnership, function(req
 });
 
 // DELETE
-router.delete("/campgrounds/:id", middleware.checkCampgroundOwnership, function(req, res){
-    Campground.findByIdAndDelete(req.params.id, function(err, deletedCampground){
+router.delete("/campgrounds/:id", middleware.checkCampgroundOwnership, (req, res) => {
+    Campground.findByIdAndDelete(req.params.id, (err, deletedCampground) => {
         if(err || !deletedCampground){
             req.flash("error", "Campground could not be deleted");
             res.redirect("/error");
         }
-        Review.deleteMany( {_id: { $in: deletedCampground.reviews } }, function(err){
+        Review.deleteMany( {_id: { $in: deletedCampground.reviews } }, (err) => {
             if(err){
                 req.flash("error", err.message);
                 res.redirect("/error");

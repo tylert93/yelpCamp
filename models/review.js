@@ -1,6 +1,6 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-var reviewSchema = mongoose.Schema({
+const reviewSchema = mongoose.Schema({
     text:String,
     createdAt:{type:Date, default:Date.now},
     rating:{type:Number, default:0},

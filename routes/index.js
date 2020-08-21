@@ -1,27 +1,27 @@
-var express = require("express"),
-    app = express(),
-    router = express.Router(),
-    passport = require("passport"),
-    User = require("../models/user");   
+const express = require("express"),
+      app = express(),
+      router = express.Router(),
+      passport = require("passport"),
+      User = require("../models/user");   
 
 // LANDING
-router.get("/", function(req, res){
+router.get("/", (req, res) => {
     res.render("landing");
 })
 
 // REGISTER
-router.get("/register", function(req, res){
+router.get("/register", (req, res) => {
     res.render("register");
 })
 
-router.post("/register", function(req, res){
+router.post("/register", (req, res) => {
     const newUser = new User({username:req.body.username});
-    User.register(newUser, req.body.password, function(err, user){
+    User.register(newUser, req.body.password, (err, user) => {
         if(err){
             req.flash("error", err.message);
             return res.redirect("register");
         }
-        passport.authenticate("local")(req, res, function(){
+        passport.authenticate("local")(req, res, () => {
             req.flash("success", "Welcome to YelpCamp " + user.username);
             res.redirect("/campgrounds");
         });
@@ -29,7 +29,7 @@ router.post("/register", function(req, res){
 });
 
 // LOGIN
-router.get("/login", function(req, res){
+router.get("/login", (req, res) => {
     res.render("login");
 });
 
@@ -38,10 +38,10 @@ router.post("/login", passport.authenticate("local",
         successRedirect:"/login_success",
         failureRedirect:"/login",
         failureFlash:true
-    }), function(req, res){
+    }), (req, res) => {
 });
 
-router.get("/login_success", function(req, res){
+router.get("/login_success", (req, res) => {
     if(req.isAuthenticated()){
         req.flash("success", "Logged in as " + req.user.username);
         res.redirect("/campgrounds");
@@ -52,18 +52,18 @@ router.get("/login_success", function(req, res){
 })
 
 // LOGOUT
-router.get("/logout", function(req, res){
+router.get("/logout", (req, res) => {
     req.logout();
     req.flash("success", "Successfully logged out");
     res.redirect("/campgrounds");
 });
 
 // ERROR
-router.get("/error", function(req, res){
+router.get("/error", (req, res) => {
     res.render("error");
 })
 
-router.get("*", function(req, res){
+router.get("*", (req, res) => {
     res.render("error");
 })
 
