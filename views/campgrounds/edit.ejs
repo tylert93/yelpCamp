@@ -5,7 +5,7 @@
 
         <h1 class="form-header">Edit <%= campground.name %></h1>
 
-        <div class="col-11 col-sm-9 col-md-7 col-lg-6 mx-auto">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 mx-auto d-inline">
             <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
                 <div class="form-group">
                     <label for="campground[name]">Name</label>
