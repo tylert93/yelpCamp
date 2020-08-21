@@ -1,8 +1,8 @@
-const middlewareObj = {},
-      Campground = require("../models/campground"),
-      Review = require("../models/review");
+var middlewareObj = {},
+    Campground = require("../models/campground"),
+    Review = require("../models/review");
 
-middlewareObj.isLoggedIn = (req, res, next) => {
+middlewareObj.isLoggedIn = function(req, res, next){
     if(req.isAuthenticated()){
         return next();
     }
@@ -10,9 +10,9 @@ middlewareObj.isLoggedIn = (req, res, next) => {
     res.redirect("/login"); 
 }
 
-middlewareObj.checkCampgroundOwnership = (req, res, next) => {
+middlewareObj.checkCampgroundOwnership = function(req, res, next){
     if(req.isAuthenticated()){
-        Campground.findById(req.params.id, (err, foundCampground) => {
+        Campground.findById(req.params.id, function(err, foundCampground){
             if(err || !foundCampground){
                 req.flash("error", "Campground not found");
                 res.redirect("back");
@@ -31,9 +31,9 @@ middlewareObj.checkCampgroundOwnership = (req, res, next) => {
     }
 }
 
-middlewareObj.checkReviewOwnership = (req, res, next) => {
+middlewareObj.checkReviewOwnership = function(req, res, next){
     if(req.isAuthenticated()){
-        Review.findById(req.params.review_id, (err, foundReview) => {
+        Review.findById(req.params.review_id, function(err, foundReview){
             if(err || !foundReview){
                 req.flash("error", "Review not found")
                 res.redirect("back");
@@ -52,14 +52,14 @@ middlewareObj.checkReviewOwnership = (req, res, next) => {
     }
 }
 
-middlewareObj.checkReviewDuplication = (req, res, next) => {
-    Campground.findById(req.params.id).populate("reviews").exec((err, foundCampground) => {
+middlewareObj.checkReviewDuplication = function(req, res, next){
+    Campground.findById(req.params.id).populate("reviews").exec(function(err, foundCampground){
         if(err || !foundCampground){
             req.flash("error", "Campground not found");
             res.redirect("error");
         } else {
-            let isOwned = false;
-            foundCampground.reviews.forEach((item) => {
+            var isOwned = false;
+            foundCampground.reviews.forEach(function(item){
                 if(item.author.id.equals(res.locals.currentUser.id)){
                     isOwned = true;
                 }
