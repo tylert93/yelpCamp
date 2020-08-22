@@ -1,20 +1,19 @@
-const express = require("express"),
-      app = express(),
-      bodyParser = require("body-parser"),
-      mongoose = require("mongoose"),
-      passport = require("passport"),
-      localStrategy = require("passport-local"),
-      expressSession = require("express-session"),
-      methodOveride = require("method-override"),
-      dotenv = require('dotenv'),
-      flash = require("connect-flash"),
-      moment = require("moment"),
-      campgroundRoutes = require("./routes/campgrounds"),
-      reviewRoutes = require("./routes/reviews"),
-      indexRoutes = require("./routes/index"),
-      Campground = require("./models/campground"),
-      Review = require("./models/review"),
-      User = require("./models/user");
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import passport from 'passport';
+import localStrategy from 'passport-local';
+import expressSession from 'express-session';
+import methodOveride from 'method-override';
+import dotenv from 'dotenv';
+import flash from 'connect-flash';
+import moment from 'moment';
+import campgroundRoutes from './routes/campgrounds';
+import reviewRoutes from './routes/reviews';
+import indexRoutes from './routes/index';
+import {User} from './models/user';
+
+const app = express();
 
 dotenv.config();      
 app.set("view engine", "ejs");

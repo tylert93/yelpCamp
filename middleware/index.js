@@ -1,8 +1,7 @@
-let middlewareObj = {};
 const Campground = require("../models/campground"),
       Review = require("../models/review");
 
-middlewareObj.isLoggedIn = (req, res, next) => {
+export const isLoggedIn = (req, res, next) => {
     if(req.isAuthenticated()){
         return next();
     }
@@ -10,7 +9,7 @@ middlewareObj.isLoggedIn = (req, res, next) => {
     res.redirect("/login"); 
 }
 
-middlewareObj.checkCampgroundOwnership = (req, res, next) => {
+export const checkCampgroundOwnership = (req, res, next) => {
     if(req.isAuthenticated()){
         Campground.findById(req.params.id, (err, foundCampground) => {
             if(err || !foundCampground){
@@ -31,7 +30,7 @@ middlewareObj.checkCampgroundOwnership = (req, res, next) => {
     }
 }
 
-middlewareObj.checkReviewOwnership = (req, res, next) => {
+export const checkReviewOwnership = (req, res, next) => {
     if(req.isAuthenticated()){
         Review.findById(req.params.review_id, (err, foundReview) => {
             if(err || !foundReview){
@@ -52,7 +51,7 @@ middlewareObj.checkReviewOwnership = (req, res, next) => {
     }
 }
 
-middlewareObj.checkReviewDuplication = (req, res, next) => {
+export const checkReviewDuplication = (req, res, next) => {
     Campground.findById(req.params.id).populate("reviews").exec((err, foundCampground) => {
         if(err || !foundCampground){
             req.flash("error", "Campground not found");
@@ -79,5 +78,3 @@ middlewareObj.checkReviewDuplication = (req, res, next) => {
         }
     });
 }
-
-module.exports = middlewareObj;

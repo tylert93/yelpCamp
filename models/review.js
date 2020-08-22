@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const reviewSchema = mongoose.Schema({
     text:String,
@@ -13,4 +13,4 @@ const reviewSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Review", reviewSchema);
+export const Review = mongoose.model("Review", reviewSchema);

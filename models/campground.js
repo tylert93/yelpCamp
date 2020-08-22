@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const campgroundSchema = mongoose.Schema({
     name:String,
@@ -23,4 +23,4 @@ const campgroundSchema = mongoose.Schema({
     }]
 });
 
-module.exports = mongoose.model("campground", campgroundSchema);
+export const Campground = mongoose.model("campground", campgroundSchema);

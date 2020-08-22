@@ -1,8 +1,9 @@
-const express = require("express"),
-      router = express.Router(),
-      middleware = require("../middleware"),
-      Campground = require("../models/campground"),
-      Review = require("../models/review");
+import express from 'express';
+import {isLoggedIn, checkReviewOwnership, checkReviewDuplication} from '../middleware/index';
+import {Campground} from '../models/campground';
+import {Review} from '../models/review';
+
+const reviewRoutes = express.Router();
 
 const calculateAverage = (reviews) => {
     if (reviews.length === 0) {
@@ -17,7 +18,7 @@ const calculateAverage = (reviews) => {
 }
 
 // NEW
-router.get("/campgrounds/:id/reviews/new", middleware.isLoggedIn, middleware.checkReviewDuplication, (req, res) => {
+reviewRoutes.get("/campgrounds/:id/reviews/new", isLoggedIn, checkReviewDuplication, (req, res) => {
     Campground.findById(req.params.id, (err, foundCampground) => {
         if(err || !foundCampground){
             req.flash("Campground not found")
@@ -29,7 +30,7 @@ router.get("/campgrounds/:id/reviews/new", middleware.isLoggedIn, middleware.che
 });
 
 // CREATE
-router.post("/campgrounds/:id/reviews", middleware.isLoggedIn, middleware.checkReviewDuplication, (req, res) => {
+reviewRoutes.post("/campgrounds/:id/reviews", isLoggedIn, checkReviewDuplication, (req, res) => {
     Campground.findById(req.params.id).populate("reviews").exec((err, foundCampground) => {
         if(err || !foundCampground){
             req.flash("error", "Campground not found");
@@ -55,7 +56,7 @@ router.post("/campgrounds/:id/reviews", middleware.isLoggedIn, middleware.checkR
 });
 
 // EDIT
-router.get("/campgrounds/:id/reviews/:review_id/edit", middleware.isLoggedIn, middleware.checkReviewOwnership, (req, res) => {
+reviewRoutes.get("/campgrounds/:id/reviews/:review_id/edit", isLoggedIn, checkReviewOwnership, (req, res) => {
     Review.findById(req.params.review_id, (err, foundReview) => {
         if(err || !foundReview){
             req.flash("error", "Review not found");
@@ -67,7 +68,7 @@ router.get("/campgrounds/:id/reviews/:review_id/edit", middleware.isLoggedIn, mi
 });
 
 // UPDATE
-router.put("/campgrounds/:id/reviews/:review_id", middleware.isLoggedIn, middleware.checkReviewOwnership, (req, res) => {
+reviewRoutes.put("/campgrounds/:id/reviews/:review_id", isLoggedIn, checkReviewOwnership, (req, res) => {
     Review.findByIdAndUpdate(req.params.review_id, req.body.review, (err, updatedReview) => {
         if(err){
             req.flash("error", err.message);
@@ -89,7 +90,7 @@ router.put("/campgrounds/:id/reviews/:review_id", middleware.isLoggedIn, middlew
 });
 
 // DELETE
-router.delete("/campgrounds/:id/reviews/:review_id", middleware.isLoggedIn, middleware.checkReviewOwnership, (req, res) => {
+reviewRoutes.delete("/campgrounds/:id/reviews/:review_id", isLoggedIn, checkReviewOwnership, (req, res) => {
     Review.findByIdAndDelete(req.params.review_id, (err, deletedReview) => {
         if(err || !deletedReview){
             req.flash("error", "Review not deleted");
@@ -105,4 +106,4 @@ router.delete("/campgrounds/:id/reviews/:review_id", middleware.isLoggedIn, midd
     });
 });
 
-module.exports = router;
+export default reviewRoutes;
