@@ -1,5 +1,5 @@
-const Campground = require("../models/campground"),
-      Review = require("../models/review");
+import {Campground} from '../models/campground';
+import {Review} from '../models/review';
 
 export const isLoggedIn = (req, res, next) => {
     if(req.isAuthenticated()){
